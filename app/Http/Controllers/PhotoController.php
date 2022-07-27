@@ -13,7 +13,7 @@ class PhotoController extends Controller
      */
     public function index()
     {
-        //
+        return view('allPhotos');
     }
 
     /**
@@ -23,7 +23,7 @@ class PhotoController extends Controller
      */
     public function create()
     {
-        //
+        return view('addNewPhoto');
     }
 
     /**

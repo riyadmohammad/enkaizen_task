@@ -34,43 +34,24 @@ class AuthController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        $email    = $request->email;
+        $email  = $request->email;
         $password = $request->password;
 
-        $auth = Auth::attempt([
-            'email'    => $email,
-            'password' => $password,
-        ]);
 
-        if (!$auth) {
+        if (!Auth::attempt([
+            'email'     => $email,
+            'password'  => $password,
+            'user_role_id' => 1
+        ])) {
+            dd('somethingrong');
             return Redirect::back()
-                ->withErrors(['password', 'You have provided the wrong credentials.']);
-        } else {
-            $loggedUser = Auth::user();
-
-            if (!in_array((int)$loggedUser->user_role_id, [1, 2, 3, 4])) {
-                Auth::guard('web')->logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                return Redirect::back()
-                    ->withErrors(['permission', 'You don\'t have permission to access.']);
-            }
+                ->withErrors(['You have provided the wrong credentials.']);
         }
-
-        return redirect('');
+        return redirect('/allPhotos');
     }
 
 
 
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/admin');
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -133,8 +114,12 @@ class AuthController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

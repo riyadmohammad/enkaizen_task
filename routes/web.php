@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\PhotoController;
+
 
 
 /*
@@ -16,8 +19,21 @@ use App\Http\Controllers\IndexController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Route::get('/',[IndexController::class,'index']);
+Route::get('/registration',[IndexController::class, 'reg']);
+Route::post('/userReg',[IndexController::class,'store']);
+
+Route::post('/login',[AuthController::class,'login']);
+
+//middleware
+
+Route::group([
+    'middleware' => ['auth:sanctum', 'userIsLoggedIn']
+], function(){
+    Route::get('/allPhotos',[PhotoController::class, 'index']);
+    Route::get('/addNewPhoto',[PhotoController::class, 'create']);
+    Route::get('/logout',[AuthController::class,'destroy']);
+
+});
+
