@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use app\Jobs\PhotoJob;
 
 class PhotoController extends Controller
 {
@@ -34,7 +35,7 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+    
     }
 
     /**
