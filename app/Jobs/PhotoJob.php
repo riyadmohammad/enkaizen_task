@@ -8,19 +8,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Models\PhotoModel;
+use Storage;
 
 class PhotoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    private $url;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $url)
     {
-        //
+        $this->url = $url;
     }
 
     /**
@@ -30,6 +34,21 @@ class PhotoJob implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $img = new PhotoModel();
+
+        $url = $this->url;
+        $contents = file_get_contents($url);
+        $name = substr($url, strrpos($url, '/') + 1);
+        Storage::put($name, $contents);
+
+        $img->path = 'storage/app/'.$name;
+        $img->img_url = $url;
+
+        $img->save();
+        dd( $name);
+
+
+
+        return $this->url;
     }
 }

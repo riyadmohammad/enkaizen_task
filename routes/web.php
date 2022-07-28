@@ -33,6 +33,9 @@ Route::group([
 ], function(){
     Route::get('/allPhotos',[PhotoController::class, 'index']);
     Route::get('/addNewPhoto',[PhotoController::class, 'create']);
+    Route::post('addPhoto',[PhotoController::class, 'store']);
+
+
     Route::get('/logout',[AuthController::class,'destroy']);
 
 });

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use app\Jobs\PhotoJob;
+use App\Jobs\PhotoJob;
+use App\Models\PhotoModel;
 
 class PhotoController extends Controller
 {
@@ -14,7 +15,10 @@ class PhotoController extends Controller
      */
     public function index()
     {
-        return view('allPhotos');
+        $imgs = PhotoModel::select('path')->get();
+        // dd($imgs);
+
+        return view('allPhotos',compact('imgs'));
     }
 
     /**
@@ -35,7 +39,10 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
-    
+        // dd($request->url);
+
+        PhotoJob::dispatch($request->url);
+
     }
 
     /**
